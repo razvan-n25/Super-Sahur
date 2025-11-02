@@ -253,6 +253,7 @@ public:
             coins_=other.coins_;
             enemies_=other.enemies_;
         }
+
         return *this;
     }
     ~World()=default;
