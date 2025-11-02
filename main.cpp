@@ -249,7 +249,6 @@ public:
     World& operator=(const World& other) {
         if (this!=&other) {
             player_=other.player_;
-            enemies_=other.enemies_;
             terrains_=other.terrains_;
             coins_=other.coins_;
             enemies_=other.enemies_;
