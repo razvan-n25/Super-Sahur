@@ -299,6 +299,7 @@ public:
     }
     ~Menu()=default;
     void showStart() {
+        std::string s;
         std::cout << "=========================\n";
         std::cout << "       CYBER PLATFORM    \n";
         std::cout << "=========================\n";
@@ -306,8 +307,19 @@ public:
         std::cout << "2. Instructions\n";
         std::cout << "3. Exit\n";
         std::cout << "=========================\n";
-        std::cout<<"Choice: ";
-        std::cin>>choice;
+        while (true) {
+            std::cout<<"Choice: ";
+            if (!(std::cin>>s)) {
+                choice=3;
+                running=false;
+                return;
+            }
+            if (s=="1" || s=="2" || s=="3") {
+                choice=s[0]-'0';
+                return;
+            }
+            std::cout<<"Invalid input. Enter 1, 2, or 3.\n";
+        }
     }
     static void showInstructions() {
         std::cout<< "\nCommands:\n";
@@ -319,15 +331,27 @@ public:
         std::cout<<"q - quit\n";
     }
     void showEnd(bool win, int coins) {
+        std::string s;
         std::cout<<"\n=========================\n";
         std::cout<<(win ? "You Win!\n" : "You Failed!\n");
         std::cout<< "Bitcoins collected: "<<coins<<"\n";
         std::cout<<"=========================\n";
         std::cout<<"1. Play Again\n";
         std::cout<<"2. Exit\n";
-        std::cout<<"Choice: ";
-        std::cin>>choice;
-        if (choice == 2) running = false;
+        while (true) {
+            std::cout<<"Choice: ";
+            if (!(std::cin>>s)) {
+                choice=2;
+                running=false;
+                return;
+            }
+            if (s=="1" || s=="2") {
+                choice=s[0]-'0';
+                if (choice==2) running=false;
+                return;
+            }
+            std::cout << "Invalid input. Enter 1 or 2.\n";
+        }
     }
     [[nodiscard]] int getChoice() const {return choice;}
     [[nodiscard]] bool isRunning() const {return running;}
@@ -362,7 +386,7 @@ int main() {
                       << " | BTC: " << world.player().getBitcoinCount() << "\n";
             std::cout << "[f] [b] [j] [fj] [bj] [q] > ";
             std::string cmd;
-            std::cin >> cmd;
+            if (!(std::cin>>cmd)) break;
             if (cmd=="q") break;
             world.handleCommand(cmd);
             world.update();
