@@ -299,7 +299,6 @@ public:
     }
     ~Menu()=default;
     void showStart() {
-        std:: string s;
         std::cout << "=========================\n";
         std::cout << "       CYBER PLATFORM    \n";
         std::cout << "=========================\n";
@@ -309,7 +308,6 @@ public:
         std::cout << "=========================\n";
         std::cout<<"Choice: ";
         std::cin>>choice;
-
     }
     static void showInstructions() {
         std::cout<< "\nCommands:\n";
@@ -321,7 +319,6 @@ public:
         std::cout<<"q - quit\n";
     }
     void showEnd(bool win, int coins) {
-        std::string s;
         std::cout<<"\n=========================\n";
         std::cout<<(win ? "You Win!\n" : "You Failed!\n");
         std::cout<< "Bitcoins collected: "<<coins<<"\n";
