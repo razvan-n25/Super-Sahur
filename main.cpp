@@ -307,18 +307,8 @@ public:
         std::cout << "2. Instructions\n";
         std::cout << "3. Exit\n";
         std::cout << "=========================\n";
-        while (true) {
-            std::cout << "Choice: ";
-            if (!(std::cin>>s)) {
-                running = false;
-                return;
-            }
-            if (s == "1" || s == "2" || s == "3") {
-                choice = s[0] - '0';
-                break;
-            }
-            std::cout << "Invalid input. Enter 1, 2, or 3.\n";
-        }
+        std::cout<<"Choice: ";
+        std::cin>>choice;
 
     }
     static void showInstructions() {
@@ -338,19 +328,8 @@ public:
         std::cout<<"=========================\n";
         std::cout<<"1. Play Again\n";
         std::cout<<"2. Exit\n";
-        while (true) {
-            std::cout << "Choice: ";
-            if (!(std::cin>>s)) {
-                running=false;
-                return;
-            }
-            if (s == "1" || s == "2") {
-                choice = s[0] - '0';
-                break;
-            }
-            std::cout << "Invalid input. Enter 1 or 2.\n";
-        }
-
+        std::cout<<"Choice: ";
+        std::cin>>choice;
         if (choice == 2) running = false;
     }
     [[nodiscard]] int getChoice() const {return choice;}
