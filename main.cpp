@@ -312,7 +312,7 @@ public:
             std::cin>>s;
             if (s == "1" || s == "2" || s == "3") {
                 choice = s[0] - '0';
-                break; // ieșim din buclă dacă e valid
+                break;
             }
             std::cout << "Invalid input. Enter 1, 2, or 3.\n";
         }
