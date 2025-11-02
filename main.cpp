@@ -309,7 +309,10 @@ public:
         std::cout << "=========================\n";
         while (true) {
             std::cout << "Choice: ";
-            std::cin>>s;
+            if (!(std::cin>>s)) {
+                running = false;
+                return;
+            }
             if (s == "1" || s == "2" || s == "3") {
                 choice = s[0] - '0';
                 break;
@@ -337,7 +340,10 @@ public:
         std::cout<<"2. Exit\n";
         while (true) {
             std::cout << "Choice: ";
-            std::cin>>s;
+            if (!(std::cin>>s)) {
+                running=false;
+                return;
+            }
             if (s == "1" || s == "2") {
                 choice = s[0] - '0';
                 break;
