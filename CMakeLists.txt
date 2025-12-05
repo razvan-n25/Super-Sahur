@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.26)
 # for now, the project name is used as the executable name
 set(MAIN_PROJECT_NAME "oop")
 set(MAIN_EXECUTABLE_NAME "${MAIN_PROJECT_NAME}")
-
+set(SFML_DIR "D://sfml/SFML-2.6.2/lib/cmake/SFML")
 
 project(${MAIN_PROJECT_NAME})
 # set(CMAKE_PROJECT_VERSION_MAJOR 0)
@@ -50,7 +50,44 @@ include(cmake/CopyHelper.cmake)
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+        headers/Player.cpp
+        headers/Player.h
+        headers/Enemy.cpp
+        headers/Enemy.h
+        headers/Blocuri_Inamici.h
+        headers/Terrain.cpp
+        headers/Terrain.h
+        headers/Coin.cpp
+        headers/Coin.h
+        headers/World.cpp
+        headers/World.h
+        headers/Menu.cpp
+        headers/Menu.h
+        headers/GameObject.cpp
+        headers/GameObject.h
+        headers/PlayerSprite.cpp
+        headers/PlayerSprite.h
+        headers/EnemySprite.cpp
+        headers/EnemySprite.h
+        headers/TerrainSprite.cpp
+        headers/TerrainSprite.h
+        headers/CoinSprite.cpp
+        headers/CoinSprite.h
+        headers/Game.cpp
+        headers/Game.h
+        headers/GameExcepsions.cpp
+        headers/GameExcepsions.h
 )
+target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
+find_package(SFML 2.6 COMPONENTS system window graphics REQUIRED)
+
+target_link_libraries(${MAIN_EXECUTABLE_NAME}
+        sfml-system
+        sfml-window
+        sfml-graphics
+        sfml-audio
+)
+
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
