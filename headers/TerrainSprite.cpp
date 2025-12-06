@@ -1,12 +1,11 @@
 #include "TerrainSprite.h"
 
 TerrainSprite::TerrainSprite(const Terrain& t, const sf::Texture& tex)
-    : GameObject(t.getType() == LAVA ? 1 : 0),    // layer 0: blocurile sub player/enemies
+    : GameObject(t.getType() == LAVA ? 1 : 0),
       terrain(t),
       sprite(tex)
 {
     auto size = tex.getSize();
-    // TOP-center ca să se alinieze cu t.getY()
     sprite.setOrigin(
         static_cast<float>(size.x) / 2.0f,
         0.f
@@ -16,8 +15,8 @@ TerrainSprite::TerrainSprite(const Terrain& t, const sf::Texture& tex)
 void TerrainSprite::update() {
 
 
-    float screenX = terrain.getX();                // pixeli
-    float screenY = GROUND_Y - terrain.getY();     // top-ul blocului
+    float screenX = terrain.getX();
+    float screenY = GROUND_Y - terrain.getY();
 
     sprite.setPosition(screenX, screenY);
 }

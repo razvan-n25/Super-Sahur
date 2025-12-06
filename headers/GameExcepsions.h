@@ -5,27 +5,24 @@
 #include <string>
 
 // Baza: derivată din std::runtime_error (=> std::exception)
-class GameException : public std::runtime_error {
+class GameExceptions : public std::runtime_error {
 public:
-    explicit GameException(const std::string& msg);
-    ~GameException() override = default;
+    explicit GameExceptions(const std::string& msg);
+    ~GameExceptions() override = default;
 
 };
 
-// 1) Eroare la încărcarea resurselor (texturi, fonturi, etc.)
-class AssetLoadException : public GameException {
+class AssetLoadException : public GameExceptions {
 public:
     AssetLoadException(const std::string& file, const std::string& what);
 };
 
-// 2) Eroare de configurare a nivelului (world / level)
-class LevelConfigException : public GameException {
+class LevelConfigException : public GameExceptions {
 public:
     explicit LevelConfigException(const std::string& msg);
 };
 
-// 3) Eroare de input în meniuri (citire din cin)
-class MenuInputException : public GameException {
+class MenuInputException : public GameExceptions {
 public:
     explicit MenuInputException(const std::string& msg);
 };

@@ -1,7 +1,3 @@
-//
-// Created by razva on 30/11/2025.
-//
-
 #ifndef OOP_COINSPRITE_H
 #define OOP_COINSPRITE_H
 
@@ -12,21 +8,15 @@
 
 class CoinSprite : public GameObject {
 private:
-    Coin& coin;         // legătura logică
-    sf::Sprite sprite;  // sprite grafic
-
-    float rotationSpeed; // opțional: rotație frumoasă
-
-    static constexpr float TILE_SIZE = 64.0f;
+    Coin* coin;
+    sf::Sprite sprite;
+    float rotationSpeed;
     static constexpr float GROUND_Y  = 500.0f;
-
 public:
-    CoinSprite(Coin& c, const sf::Texture& tex);
-
+    CoinSprite(Coin* c, const sf::Texture& tex);
+    void attachCoin(Coin* c) { coin = c; }
     void update() override;
     void drawImpl(sf::RenderWindow& window) const override;
-
     [[nodiscard]] std::unique_ptr<GameObject> clone() const override;
 };
-
 #endif //OOP_COINSPRITE_H

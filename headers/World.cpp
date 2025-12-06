@@ -3,17 +3,14 @@
 
 namespace {
 
-    constexpr float TILE_lava=256.f;
     constexpr float lava_halfwidth=32.f;
-    constexpr float TILE_SIZE          = 64.0f; // bloc ~64x64
-    constexpr float BLOCK_HALF_WIDTH   = TILE_SIZE / 2.0f;
-    constexpr float BLOCK_HALF_HEIGHT  = TILE_SIZE / 2.0f;
-
-    // aproximări pentru player
-    constexpr float PLAYER_HALF_WIDTH  =32.f; // pe X
+    constexpr float TILE_SIZE = 64.f;
+    constexpr float BLOCK_HALF_WIDTH  = TILE_SIZE / 2.0f;
+    constexpr float BLOCK_HALF_HEIGHT = TILE_SIZE / 2.0f;
+    constexpr float LEVEL_END_X = 2000.f;
+    constexpr float PLAYER_HALF_WIDTH  =25.f; // pe X
 }
 
-// ----------------- CONSTRUCTORI -----------------
 
 World::World(const Player& p)
     : player_(p) {}
@@ -36,16 +33,12 @@ World& World::operator=(const World& other) {
 
 World::~World() = default;
 
-// ----------------- ADĂUGARE -----------------
-
 void World::addTerrain(const Terrain& t) { terrains_.push_back(t); }
 void World::addCoin(const Coin& c)       { coins_.push_back(c); }
 void World::addEnemy(const Enemy& e)     { enemies_.push_back(e); }
 
 Player& World::player() { return player_; }
 const Player& World::player() const { return player_; }
-
-// ----------------- COLIZIUNI PLAYER – TEREN (AABB) -----------------
 
 void World::handleTerrainCollisions() {
     float feetY        = player_.y;
@@ -61,13 +54,13 @@ void World::handleTerrainCollisions() {
     for (const auto& t : terrains_) {
         float blockCenterX = t.getX();
         float blockTop     = t.getY();
-        float blockBottom  = blockTop - (t.isHazard()? TILE_lava : TILE_SIZE);
+        float blockBottom  = blockTop - (TILE_SIZE);
         float blockCenterY = (blockTop + blockBottom) / 2.0f;
 
-        // 1) LAVA
+        //1) LAVA
         if (t.isHazard()) {
             float dx      = std::fabs(playerCenterX - blockCenterX);
-            float maxHalf = lava_halfwidth + PLAYER_HALF_WIDTH;
+            float maxHalf = lava_halfwidth + PLAYER_HALF_WIDTH-20.f;
 
             bool overlapX  = dx <= maxHalf;
             bool touchLava = (playerBottom <= blockTop);
@@ -78,7 +71,7 @@ void World::handleTerrainCollisions() {
                     player_.takeDamage();
                 return;
             }
-            continue;   // nu rezolvăm geometria pentru lava
+            continue;
         }
 
         // 2) BLOCURILE NORMALE: AABB
@@ -115,7 +108,6 @@ void World::handleTerrainCollisions() {
             }
         }
 
-        // recalculăm după corecție
         feetY         = player_.y;
         playerTop     = feetY + playerHeight;
         playerBottom  = feetY;
@@ -128,10 +120,9 @@ void World::handleTerrainCollisions() {
     }
 }
 
-// ----------------- ENEMIES -----------------
 
 void World::checkEnemies() {
-    const float epsX   = 20.f;//20
+    const float epsX   = 20.f;
     const float epsHead = 35.f;
 
     for (auto& e : enemies_) {
@@ -158,7 +149,6 @@ void World::checkEnemies() {
     }
 }
 
-// ----------------- COINS -----------------
 
 void World::collectCoins() {
     const float epsX = 20.f;
@@ -180,19 +170,20 @@ void World::collectCoins() {
     }
 }
 
-// ----------------- UPDATE + GAME OVER -----------------
 
 void World::update() {
     checkEnemies();
     collectCoins();
-    handleTerrainCollisions();   // AICI rezolvăm şi peretele, şi podeaua, şi tavanul
+    handleTerrainCollisions();
+    if (player_.getX() >= LEVEL_END_X) {
+        levelCompleted_ = true;
+    }
 }
 
 bool World::isGameOver() const {
     return player_.getHearts() <= 0;
 }
 
-// ----------------- PRINT -----------------
 
 std::ostream& operator<<(std::ostream& os, const World& w) {
     os << "World:\n" << w.player_ << "\n";

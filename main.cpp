@@ -16,8 +16,9 @@ int main() {
                 while (playing) {
                     Game game;
                     game.run();
-                    int coins  = game.getCoinCount();          // numărul de monede adunate
-                    menu.showEnd(coins);
+                    int coins  = game.getCoinCount();
+                    bool win = game.didPlayerWin();
+                    menu.showEnd(win, coins);
                     if (menu.getChoice()==1)
                         continue;
                     else
@@ -32,7 +33,7 @@ int main() {
 
         return 0;
     }
-    catch (const GameException& e) {
+    catch (const GameExceptions& e) {
         std::cerr << "Game error: " << e.what() << "\n";
         return 1;
     }

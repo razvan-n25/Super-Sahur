@@ -19,7 +19,7 @@ public:
 
     void showStart();
     static void showInstructions();
-    void showEnd(int coins);
+    void showEnd(bool win, int coins);
 
     [[nodiscard]] int getChoice() const;
     [[nodiscard]] bool isRunning() const;

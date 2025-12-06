@@ -21,10 +21,7 @@ Terrain& Terrain::operator=(const Terrain& other) {
 
 Terrain::~Terrain() = default;
 
-void Terrain::setSize(float w, float h) {
-    width  = w;
-    height = h;
-}
+
 
 std::ostream& operator<<(std::ostream& os, const Terrain& t) {
     os << "Terrain(type=";

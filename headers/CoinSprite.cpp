@@ -1,10 +1,10 @@
 #include "CoinSprite.h"
 
-CoinSprite::CoinSprite(Coin& c, const sf::Texture& tex)
-    : GameObject(2),     // layer 1 (ca player/enemies, deasupra terenului)
+CoinSprite::CoinSprite(Coin* c, const sf::Texture& tex)
+    : GameObject(2),
       coin(c),
       sprite(tex),
-      rotationSpeed(90.0f)  // grade / secundă
+      rotationSpeed(90.0f)
 {
     auto size = tex.getSize();
     sprite.setOrigin(
@@ -14,29 +14,23 @@ CoinSprite::CoinSprite(Coin& c, const sf::Texture& tex)
 }
 
 void CoinSprite::update() {
-    // dacă ai varianta cu dt: void CoinSprite::update(float dt)
-    // (void)dt;
-
-    if (coin.isCollected())
+    if (!coin)
         return;
 
-    // coin.getX() / getY() sunt în PIXELI
-    float screenX = coin.getX();              // FĂRĂ * TILE_SIZE
-    float screenY = GROUND_Y - coin.getY();   // pixeli deasupra solului
-
+    if (coin->isCollected())
+        return;
+    float screenX = coin->getX();
+    float screenY = GROUND_Y - coin->getY();
     sprite.setPosition(screenX, screenY);
-
-    // animație simplă – aici 0.016 e ~dt pentru 60FPS; poți să o lași așa
     sprite.rotate(rotationSpeed * 0.016f);
 }
-
-
 void CoinSprite::drawImpl(sf::RenderWindow& window) const {
-    if (coin.isCollected())
+    if (!coin)
+        return;
+    if (coin->isCollected())
         return;
     window.draw(sprite);
 }
-
 std::unique_ptr<GameObject> CoinSprite::clone() const {
     return std::make_unique<CoinSprite>(*this);
 }

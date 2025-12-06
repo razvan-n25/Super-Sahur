@@ -47,27 +47,31 @@ void Menu::showInstructions() {
     std::cout << "space  - jump up\n";
 }
 
-void Menu::showEnd(int coins) {
+void Menu::showEnd(bool win, int coins) {
     std::string s;
+    std::cout << "\n=========================\n";
+    if (win)
+        std::cout << "YOU WIN!\n";
+    else
+        std::cout << "YOU FAILED!\n";
     std::cout << "Bitcoins collected: " << coins << "\n";
     std::cout << "=========================\n";
     std::cout << "1. Play Again\n";
     std::cout << "2. Exit\n";
-    while (true) {
-        std::cout << "Choice: ";
-        if (!(std::cin >> s)) {
-            throw MenuInputException("Failed to read input in showEnd()");
-        }
-
-        if (s == "1" || s == "2") {
-            choice = s[0] - '0';
-            if (choice == 2) running = false;
-            return;
-        }
-
-        throw MenuInputException("Invalid input in showEnd()");
+    std::cout << "=========================\n";
+    std::cout << "Choice: ";
+    if (!(std::cin >> s)) {
+        throw MenuInputException("Failed to read input in showEnd()");
     }
+    if (s != "1" && s != "2") {
+        throw MenuInputException("Invalid input in showEnd(): expected 1 or 2");
+    }
+    // dacă ajunge aici, inputul e valid
+    choice = s[0] - '0';
+    if (choice == 2)
+        running = false;
 }
+
 
 int Menu::getChoice() const { return choice; }
 bool Menu::isRunning() const { return running; }

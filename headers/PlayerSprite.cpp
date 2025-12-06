@@ -1,12 +1,11 @@
 #include "PlayerSprite.h"
 
 PlayerSprite::PlayerSprite(Player& p, const sf::Texture& tex)
-    : GameObject(2),   // layer 1: player / inamici
+    : GameObject(2),
       player(p),
       sprite(tex)
 {
     auto size = tex.getSize();
-    // picioarele la baza sprite-ului
     sprite.setOrigin(
         static_cast<float>(size.x) / 2.0f,
         static_cast<float>(size.y)
@@ -16,8 +15,8 @@ PlayerSprite::PlayerSprite(Player& p, const sf::Texture& tex)
 void PlayerSprite::update() {
 
 
-    float screenX = player.getX();                 // x deja în pixeli
-    float screenY = GROUND_Y - player.getY();      // y = înălțimea deasupra solului
+    float screenX = player.getX();
+    float screenY = GROUND_Y - player.getY();
 
     sprite.setPosition(screenX, screenY);
 }

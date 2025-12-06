@@ -17,9 +17,10 @@ private:
     std::vector<Terrain> terrains_;
     std::vector<Coin>    coins_;
 
-    void handleTerrainCollisions();  // coliziuni complet player–bloc (AABB)
+    void handleTerrainCollisions();
     void checkEnemies();
     void collectCoins();
+    bool levelCompleted_ = false;
 
 public:
     explicit World(const Player& p);
@@ -34,8 +35,10 @@ public:
     Player& player();
     [[nodiscard]] const Player& player() const;
 
-    void update();                     // logică: inamici, monede, blocuri, lava
+    void update();
     [[nodiscard]] bool isGameOver() const;
+    [[nodiscard]] bool isLevelCompleted() const { return levelCompleted_; }
+
 
     // GETTERS pentru Game (sprite-uri)
     std::vector<Enemy>& getEnemies() { return enemies_; }

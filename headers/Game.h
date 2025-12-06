@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "World.h"
-#include "GameObject.h"
 #include "PlayerSprite.h"
 #include "EnemySprite.h"
 #include "TerrainSprite.h"
@@ -16,12 +15,11 @@ class Game {
 private:
     sf::RenderWindow window;
     sf::Clock clock;
-
+    sf::View view;
     World world;
-
     // toate obiectele desenabile (player, inamici, blocuri, monede)
     std::vector<std::unique_ptr<GameObject>> objects;
-
+    std::unique_ptr<CoinSprite> coinPrefab;
     // texturi
     sf::Texture playerTex;
     sf::Texture fishTex;
@@ -39,15 +37,15 @@ private:
     bool        hasBackground = false;
 
     void handleInput();
-    void initWorld();     // poziționează blocuri, inamici, monede (în PIXELI)
-    void initTextures();  // încarcă texturile din fișiere
-    void initSprites();   // creează sprite-urile pe baza lui world + texturi
+    void initWorld();
+    void initTextures();
+    void initSprites();
 
 public:
     Game();
     void run();
     int getCoinCount() const;
-
+    bool didPlayerWin() const;
 };
 
 #endif // OOP_GAME_H

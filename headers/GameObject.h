@@ -9,7 +9,7 @@
 
 class GameObject {
 private:
-    int layer;   // strat de desen
+    int layer;
 
 public:
     explicit GameObject(int layer_ = 0);
@@ -17,16 +17,13 @@ public:
 
     [[nodiscard]] int getLayer() const { return layer; }
 
-    // funcție virtuală pură – fiecare sprite o implementează diferit
+
     virtual void update() = 0;
 
-    // interfață NON-virtuală
     void draw(sf::RenderWindow& window) const;
 
-    // constructor virtual (clone)
     [[nodiscard]] virtual std::unique_ptr<GameObject> clone() const = 0;
 
-    // funcție virtuală pentru desen (acum PUBLIC)
     virtual void drawImpl(sf::RenderWindow& window) const = 0;
 };
 #endif //OOP_GAMEOBJECT_H

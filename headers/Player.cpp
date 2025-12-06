@@ -1,13 +1,11 @@
 #include "Player.h"
 
-// ----------------- CONSTRUCTORI -----------------
-
 Player::Player()
     : x(0.f), y(0.f),
       vx(0.f), vy(0.f),
       onGround(true),
       hearts(5), bitcoins(0),
-      height(64.f)    // ~80px înălțime, ajustezi după sprite
+      height(64.f)
 {}
 
 Player::Player(float px, float py, int h)
@@ -43,8 +41,6 @@ Player& Player::operator=(const Player& other) {
 
 Player::~Player() = default;
 
-// ----------------- CONTROL INPUT -----------------
-
 void Player::moveRight() {
 
     vx = MOVE_SPEED;   // pixeli / secundă
@@ -59,25 +55,21 @@ void Player::stopHorizontal() {
 }
 
 void Player::jump() {
-    // poți sări doar dacă ești pe ceva (sol / bloc)
     if (onGround) {
-        vy = JUMP_SPEED;    // impuls în sus (y măsoară înălțimea deasupra solului)
+        vy = JUMP_SPEED;
         onGround = false;
     }
 }
 
-// ----------------- FIZICĂ -----------------
 
 void Player::update(float dt) {
-    // 1) mișcare orizontală
     x += vx * dt;
 
-    // 2) gravitație DOAR când e în aer
     if (!onGround) {
-        vy -= GRAVITY * dt;   // accelerație în jos
-        y  += vy * dt;        // actualizare poziție verticală
+        vy -= GRAVITY * dt;
+        y  += vy * dt;
     } else {
-        vy = 0.f;             // pe sol / bloc: nu acumulăm viteză verticală
+        vy = 0.f;
     }
     /*if (y < 0.f) { y = 0.f;
         vy = 0.f;
@@ -87,22 +79,13 @@ void Player::update(float dt) {
         x = 0.f;
     }
     if (y < -300.f) {
-        hearts = 0; // instant death sau player_.takeDamage()
+        hearts = 0;
     }
 }
-
-
-// ----------------- SOL / BLOC -----------------
 
 void Player::setOnGround(bool value) {
     onGround = value;
 }
-
-bool Player::isOnGround() const {
-    return onGround;
-}
-
-// ----------------- GAMEPLAY -----------------
 
 void Player::addBitcoin(int n) {
     bitcoins += n;
@@ -115,15 +98,12 @@ void Player::takeDamage() {
     }
 }
 
-// ----------------- GETTERI -----------------
 
 float Player::getX() const { return x; }
 float Player::getY() const { return y; }
 float Player::getHeight() const { return height; }
 int   Player::getHearts() const { return hearts; }
 int   Player::getBitcoinCount() const { return bitcoins; }
-
-// ----------------- PRINT -----------------
 
 std::ostream& operator<<(std::ostream& os, const Player& a) {
     os << "Player(x=" << a.x

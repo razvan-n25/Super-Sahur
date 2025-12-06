@@ -11,7 +11,7 @@ private:
     Player& player;
     sf::Sprite sprite;
 
-    static constexpr float GROUND_Y = 500.0f; // poziția solului pe ecran (pixeli)
+    static constexpr float GROUND_Y = 500.0f;
 
 public:
     PlayerSprite(Player& p, const sf::Texture& tex);

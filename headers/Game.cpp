@@ -2,93 +2,123 @@
 #include <iostream>
 #include "GameExcepsions.h"
 
-
-namespace {
-    constexpr float TILE_b_e_c = 64.f;
-    constexpr float TILE_p=128.f;
-    constexpr float TILE_lava=64.f;
-    constexpr float TILE_bg=64.f;
-
-
-}
-
-// ----------------- CONSTRUCTOR -----------------
-
 Game::Game()
     : window(sf::VideoMode(1280, 720), "Cyber Platform"),
-      world(Player(TILE_p / 2.f, 0.f, 5))   // player la x = mijlocul primului bloc, pe sol (y=0)
+      world(Player(32.f, 0.f, 5))
 {
     window.setFramerateLimit(180);
-
-    initWorld();     // punem blocuri, inamici, coins în World (în PIXELI)
-    initTextures();  // încărcăm texturile
-    initSprites();   // facem sprite-uri pentru tot ce e în World
+    view = window.getDefaultView();
+    initWorld();
+    initTextures();
+    initSprites();
 }
-
-// ----------------- INIT WORLD (LOGICĂ NIVEL, TOTUL ÎN PIXELI) -----------------
 
 void Game::initWorld() {
-    // Ground: o bandă de CEMENT la y=0, de la x = 0...10 tile-uri
-    bool hasGround=false;
-    for (int i = 0; i <= 7; ++i) {
-        float centerX = i * TILE_bg + TILE_bg / 2.f;   // centrul blocului
-        if (i<=3)
-        world.addTerrain(Terrain(centerX, 0.f, CEMENT)),hasGround=true; // top-ul blocului = 0px deasupra solului
-        else
-        world.addTerrain(Terrain(centerX, -64.f, CEMENT));
+    int hasGround = 0;
+
+    for (int i = 0; i < 7; ++i) {
+        float x = 32.f + i * 64.f;
+        Terrain t(x, 0.f, CEMENT);
+        world.addTerrain(t);
+        hasGround++;
     }
 
-    // O platformă suspendată la 2 tile-uri deasupra solului
+    world.addTerrain(Terrain(160.f, 32.f, JUMP_BOX_LOW));
+    world.addCoin(Coin(160.f, 120.f));
+    world.addEnemy(Enemy(230.f, 0.f, FISH));
+
+    for (int i = 0; i < 5; ++i) {
+        float x = 32.f + (7 + i) * 64.f;
+        Terrain t(x, -64.f, CEMENT);
+        world.addTerrain(t);
+        hasGround++;
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        float x = 32.f + (8 + i) * 64.f;
+        world.addTerrain(Terrain(x, 192.f, CEMENT));
+    }
+
     {
-        float yTop = 2.f * TILE_b_e_c;  // top-ul platformei la 2 tile-uri peste sol
-        float x4 = 4 * TILE_b_e_c + TILE_b_e_c / 2.f;
-        float x5 = 5 * TILE_b_e_c + TILE_b_e_c / 2.f;
-        float x6 = 6 * TILE_b_e_c + TILE_b_e_c / 2.f;
-
-        world.addTerrain(Terrain(x4, yTop, PLATFORM));
-        world.addTerrain(Terrain(x5, yTop, PLATFORM));
-        world.addTerrain(Terrain(x6, yTop, PLATFORM));
+        float baseX = 380.f;
+        float baseY = 64.f;
+        world.addTerrain(Terrain(baseX - 64.f, baseY, JUMP_BOX_LOW));
+        world.addTerrain(Terrain(baseX,baseY, JUMP_BOX_LOW));
+        world.addTerrain(Terrain(baseX + 64.f, baseY, JUMP_BOX_LOW));
+        world.addTerrain(Terrain(baseX - 32.f, baseY + 64.f, JUMP_BOX_LOW));
+        world.addTerrain(Terrain(baseX + 32.f, baseY + 64.f, JUMP_BOX_LOW));
+        world.addTerrain(Terrain(baseX, baseY + 128.f, JUMP_BOX_LOW));
 
     }
 
-    // Două jump boxes la 1 tile deasupra solului
-    {
-        float yTop = 1.f * TILE_b_e_c;
-        float x2 = 2 * TILE_b_e_c + TILE_b_e_c / 2.f;
-        float x8 = 8 * TILE_b_e_c + TILE_b_e_c / 2.f;
-
-        world.addTerrain(Terrain(x2, yTop, JUMP_BOX_LOW));
-        world.addTerrain(Terrain(x8, yTop, JUMP_BOX_HIGH));
+    for (int i = 0; i < 3; ++i) {
+        float x = 32.f + (12 + i) * 64.f;
+        Terrain t(x, 0.f, CEMENT);
+        world.addTerrain(t);
+        hasGround++;
     }
 
-    // Un „lac” de LAVA
-    {
-        float yTop = 0.f;
-        float x12 = 9 * TILE_lava + TILE_lava / 2.f;
-        float x13 = 10 * TILE_lava + TILE_lava / 2.f;
-        float x14 = 11 * TILE_lava + TILE_lava / 2.f;
-
-        world.addTerrain(Terrain(x12, yTop, LAVA));
-        world.addTerrain(Terrain(x13, yTop, LAVA));
-        world.addTerrain(Terrain(x14, yTop, LAVA));
+    world.addTerrain(Terrain(900.f, 0.f, LAVA));
+    for (int i = 0; i < 7; ++i) {
+        world.addTerrain(Terrain(928.f + i * 64.f, 0.f, LAVA));
     }
 
-    // Inamici (coordonate în pixeli, y = înălțime deasupra solului)
-    world.addEnemy(Enemy(3 * TILE_b_e_c + TILE_b_e_c / 2.f, 0.f, FISH));        // șarpe pe sol
-    world.addEnemy(Enemy(7 * TILE_b_e_c + TILE_b_e_c / 2.f, 2.5f * TILE_b_e_c, DRONE));   // dronă deasupra
+    world.addTerrain(Terrain(820.f,  64.f, PLATFORM));
+    world.addTerrain(Terrain(980.f, 128.f, PLATFORM));
+    world.addTerrain(Terrain(1140.f,128.f, PLATFORM));
+    world.addTerrain(Terrain(1312.f,64.f,  PLATFORM));
 
-    // Monede
-    world.addCoin(Coin(1 * TILE_b_e_c + TILE_b_e_c / 2.f, TILE_b_e_c));        // la 1 tile de sol
-    world.addCoin(Coin(5 * TILE_b_e_c + TILE_b_e_c / 2.f, 3.5 * TILE_b_e_c));    // sus pe platformă
-    world.addCoin(Coin(9 * TILE_b_e_c + TILE_b_e_c / 2.f, 2 * TILE_b_e_c));    // între jump boxes
-    if (!hasGround)
-        throw LevelConfigException("World has no ground tiles.");
+    world.addEnemy(Enemy(760.f, 0.f, FISH));   // în stânga lava
+    world.addEnemy(Enemy(1360.f, 0.f, FISH));  // după lava
+
+    world.addCoin(Coin(980.f, 180.f));
+    world.addCoin(Coin(1140.f, 180.f));
+    world.addCoin(Coin(1300.f, 120.f));
+
+    for (int i = 0; i < 5; ++i) {
+        float x = 1312.f + i * 64.f;
+        Terrain t(x, 0.f, CEMENT);
+        world.addTerrain(t);
+        hasGround++;
+    }
+
+    world.addTerrain(Terrain(1450.f,  64.f, PLATFORM));
+    world.addTerrain(Terrain(1520.f, 128.f, PLATFORM));
+    world.addTerrain(Terrain(1590.f, 192.f, PLATFORM));
+    world.addTerrain(Terrain(1660.f, 256.f, PLATFORM));
+
+    world.addEnemy(Enemy(1660.f, 300.f, DRONE));
+
+    world.addCoin(Coin(1450.f, 110.f));
+    world.addCoin(Coin(1520.f, 170.f));
+    world.addCoin(Coin(1590.f, 230.f));
+    world.addCoin(Coin(1660.f, 290.f));
+
+    for (float x = 1750.f; x <= 1950.f; x += 64.f) {
+        Terrain t(x, 0.f, CEMENT);
+        world.addTerrain(t);
+        hasGround++;
+    }
+
+    world.addTerrain(Terrain(1780.f, 192.f, CEMENT));
+    world.addTerrain(Terrain(1844.f, 192.f, CEMENT));
+    world.addTerrain(Terrain(1908.f, 192.f, CEMENT));
+
+    world.addTerrain(Terrain(1760.f, 64.f,  JUMP_BOX_LOW));
+    world.addTerrain(Terrain(1840.f, 64.f,  JUMP_BOX_HIGH));
+    world.addTerrain(Terrain(1920.f, 128.f, JUMP_BOX_HIGH));
+
+    world.addEnemy(Enemy(1720.f, 0.f, FISH));
+    world.addEnemy(Enemy(1800.f, 0.f, FISH));
+    world.addEnemy(Enemy(1880.f, 0.f, FISH));
+
+    world.addEnemy(Enemy(1908.f, 270.f, DRONE));
+
+    if (hasGround == 0)
+        throw LevelConfigException("World has no CEMENT ground tiles.");
 }
 
-// ----------------- INIT TEXTURES -----------------
-
 void Game::initTextures() {
-    // trebuie să ai folderul assets/ în directorul de lucru
 
     if (!playerTex.loadFromFile("assets/character_yellow_duck.png"))
         throw AssetLoadException("assets/character_yellow_duck.png", "player texture");
@@ -117,7 +147,6 @@ void Game::initTextures() {
     if (!lavaTex.loadFromFile("assets/lava64.jpg"))
         throw AssetLoadException("assets/lava64.jpg", "lava texture");
 
-    // background opțional: dacă nu se încarcă, nu aruncăm excepție
     if (backgroundTex.loadFromFile("assets/backgroundcyber.png")) {
         hasBackground = true;
         backgroundSprite.setTexture(backgroundTex);
@@ -127,20 +156,14 @@ void Game::initTextures() {
     }
 }
 
-
-// ----------------- INIT SPRITES -----------------
-
 void Game::initSprites() {
-    // PLAYER sprite
     objects.push_back(std::make_unique<PlayerSprite>(world.player(), playerTex));
 
-    // ENEMY sprite-uri
     for (auto& e : world.getEnemies()) {
         const sf::Texture& tex = (e.getType() == FISH ? fishTex : droneTex);
         objects.push_back(std::make_unique<EnemySprite>(e, tex));
     }
 
-    // TERRAIN sprite-uri
     for (auto& t : world.getTerrains()) {
         const sf::Texture* tex=nullptr;
         switch (t.getType()) {
@@ -150,17 +173,20 @@ void Game::initSprites() {
             case JUMP_BOX_HIGH: tex = &jumpHighTex;   break;
             case LAVA:          tex = &lavaTex;       break;
             default:
-                // Dacă apare un tip necunoscut -> excepție clară
                 throw AssetLoadException("unknown block type", "TerrainSprite creation");
         }
         objects.push_back(std::make_unique<TerrainSprite>(t, *tex));
     }
 
-    // COIN sprite-uri
+    coinPrefab = std::make_unique<CoinSprite>(nullptr, coinTex);
     for (auto& c : world.getCoins()) {
-        objects.push_back(std::make_unique<CoinSprite>(c, coinTex));
+        auto sprite = coinPrefab->clone();
+        auto* cs = dynamic_cast<CoinSprite*>(sprite.get());
+        if (cs) {
+            cs->attachCoin(&c);
+        }
+        objects.push_back(std::move(sprite));
     }
-
     // Dacă vrei să respecți „layer”-ul, poți sorta vectorul aici după getLayer().
     std::sort(objects.begin(), objects.end(),
               [](const std::unique_ptr<GameObject>& a,
@@ -169,35 +195,27 @@ void Game::initSprites() {
               });
 }
 
-// ----------------- INPUT -----------------
-
 void Game::handleInput() {
 
-
     Player& p = world.player();
-
     bool left  = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
     bool right = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
     bool jump  = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
     if (left && !right) {
-        p.moveLeft();         // setează vx negativ
+        p.moveLeft();
     } else if (right && !left) {
-        p.moveRight();        // setează vx pozitiv
+        p.moveRight();
     } else {
-        p.stopHorizontal();     // vx = 0 => mers oprit, sărituri verticale
+        p.stopHorizontal();
     }
-
     if (jump) {
-        p.jump();               // sare DOAR dacă onGround == true
+        p.jump();
     }
 }
 
-// ----------------- RUN (GAME LOOP) -----------------
-
 void Game::run() {
     while (window.isOpen()) {
-        // evenimente SFML (ieșire, etc.)
         sf::Event event{};
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -206,37 +224,49 @@ void Game::run() {
 
         float dt = clock.restart().asSeconds();
 
-        // 1) input
         handleInput();
 
-        // 2) update logic player (fizică în pixeli)
         world.player().update(dt);
 
-        // 3) update world (inamici, monede, blocuri, lava)
         world.update();
 
-        // 4) update sprite-uri (poziții / animații grafice)
+        {
+            static bool spawnedCoins = false;
+
+            if (!spawnedCoins && world.player().getX() > 1680.f) {
+                spawnedCoins = true;
+
+                const float xs[] = { 1700.f, 1920.f};
+                const float ys[] = { 130.f,  220.f};
+                for (int i = 0; i < 2; ++i) {
+                    world.addCoin(Coin(xs[i], ys[i]));
+                    Coin& newCoin = world.getCoins().back();
+                    auto spriteClone = coinPrefab->clone();
+                    auto* cs = dynamic_cast<CoinSprite*>(spriteClone.get());
+                    if (cs) {
+                        cs->attachCoin(&newCoin);
+                    }
+                    objects.push_back(std::move(spriteClone));
+                }
+            }
+        }
         for (auto& o : objects)
             o->update();
-        // ) animatie specială pentru DRONE folosind dynamic_cast
+        float camX = world.player().getX();
+        float halfW = view.getSize().x / 2.f;
+        if (camX < halfW) camX = halfW;
+        view.setCenter(camX, window.getSize().y / 2.f);
+        // aplici view-ul pe fereastră
+        window.setView(view);
         for (auto& obj : objects) {
-            // downcast de la GameObject* la EnemySprite*
             if (auto* enemySprite = dynamic_cast<EnemySprite*>(obj.get())) {
                 Enemy& e = enemySprite->getEnemy();
-
                 if (e.getType() == DRONE) {
-                    // parametri de mișcare
-                    const float speed   = 120.f;      // pixeli / secundă
-                    const float leftLim = 384.f;   // limite aproximative
-                    const float rightLim= 640.f;  // alege ce vrei tu
-
-                    // direcția o ținem static (o singură dronă)
-                     static float dir = 1.f;  // 1 = dreapta, -1 = stânga
-
-                    // deplasare
+                    const float speed   = 120.f;
+                    const float leftLim = 384.f;
+                    const float rightLim= 640.f;
+                     static float dir = 1.f;
                     e.moveX(dir * speed * dt);
-
-                    // întoarcere la capete
                     if (e.getX() < leftLim) {
                         e.setX(leftLim);
                         dir = 1.f;
@@ -249,21 +279,22 @@ void Game::run() {
             }
         }
 
-
-        // 5) desen
         window.clear(sf::Color::Black);
-
-        if (hasBackground)
-            window.draw(backgroundSprite);   // background înainte de toate
-
-        for (auto& o : objects)
+        if (hasBackground) {
+            window.setView(window.getDefaultView());
+            window.draw(backgroundSprite);
+        }
+        window.setView(view);
+        for (const auto& o : objects)
             o->draw(window);
-
         window.display();
-
-        // (opțional) verificare game over
         if (world.isGameOver()) {
             std::cout << "Game Over!\n";
+            window.close();
+            return;
+        }
+        if (world.isLevelCompleted()) {
+            std::cout << "You Win!\n";
             window.close();
             return;
         }
@@ -272,3 +303,6 @@ void Game::run() {
 int Game::getCoinCount() const {
     return world.player().getBitcoinCount();
 }
+bool Game :: didPlayerWin() const { return world.isLevelCompleted(); }
+
+
