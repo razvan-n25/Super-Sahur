@@ -54,10 +54,37 @@ add_executable(${PROJECT_NAME}
     main.cpp
     generated/src/Helper.cpp
     env_fixes.h
+        headers/Blocuri_Inamici.h
+        headers/Coin.cpp
+        headers/Coin.h
+        headers/CoinSprite.cpp
+        headers/CoinSprite.h
+        headers/Enemy.cpp
+        headers/Enemy.h
+        headers/EnemySprite.cpp
+        headers/EnemySprite.h
+        headers/Game.cpp
+        headers/Game.h
+        headers/GameObject.cpp
+        headers/GameObject.h
+        headers/Menu.cpp
+        headers/Menu.h
+        headers/Player.cpp
+        headers/Player.h
+        headers/PlayerSprite.cpp
+        headers/PlayerSprite.h
+        headers/Terrain.cpp
+        headers/Terrain.h
+        headers/TerrainSprite.cpp
+        headers/TerrainSprite.h
+        headers/World.cpp
+        headers/World.h
+        headers/GameExcepsions.cpp
+        headers/GameExcepsions.h
 )
 
 include(cmake/CompilerFlags.cmake)
-
+target_include_directories(${PROJECT_NAME} PRIVATE headers)
 ###############################################################################
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
