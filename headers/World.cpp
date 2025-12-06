@@ -1,6 +1,5 @@
 #include "World.h"
 #include <cmath>
-
 namespace {
 
     constexpr float lava_halfwidth=32.f;
@@ -10,7 +9,6 @@ namespace {
     constexpr float LEVEL_END_X = 2000.f;
     constexpr float PLAYER_HALF_WIDTH  =25.f; // pe X
 }
-
 
 World::World(const Player& p)
     : player_(p) {}
