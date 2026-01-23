@@ -71,10 +71,6 @@ void Player::update(float dt) {
     } else {
         vy = 0.f;
     }
-    /*if (y < 0.f) { y = 0.f;
-        vy = 0.f;
-        onGround = true;
-    }*/
     if (x < 0.f) {
         x = 0.f;
     }

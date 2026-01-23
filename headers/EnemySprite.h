@@ -14,15 +14,13 @@ class EnemySprite : public GameObject {
 private:
     Enemy& enemy;
     sf::Sprite sprite;
-
-
+    void drawImpl(sf::RenderWindow& window) const override;
     static constexpr float GROUND_Y  = 500.0f;
 
 public:
     EnemySprite(Enemy& e, const sf::Texture& tex);
 
     void update() override;
-    void drawImpl(sf::RenderWindow& window) const override;
     Enemy& getEnemy();
     [[nodiscard]] std::unique_ptr<GameObject> clone() const override;
 };

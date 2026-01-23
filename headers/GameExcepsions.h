@@ -14,7 +14,7 @@ public:
 
 class AssetLoadException : public GameExceptions {
 public:
-    AssetLoadException(const std::string& file, const std::string& what);
+    AssetLoadException(const std::string& file, const std::string& what_f);
 };
 
 class LevelConfigException : public GameExceptions {

@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 #include "GameExcepsions.h"
-
+#include "WindowFactory.h"
 Game::Game()
     : window(sf::VideoMode(1280, 720), "Cyber Platform"),
       world(Player(32.f, 0.f, 5))
@@ -255,11 +255,10 @@ void Game::run() {
         float camX = world.player().getX();
         float halfW = view.getSize().x / 2.f;
         if (camX < halfW) camX = halfW;
-        view.setCenter(camX, window.getSize().y / 2.f);
-        // aplici view-ul pe fereastră
+        view.setCenter(camX, window.getSize().y/2.f);
         window.setView(view);
         for (auto& obj : objects) {
-            if (auto* enemySprite = dynamic_cast<EnemySprite*>(obj.get())) {
+            if (EnemySprite* enemySprite = dynamic_cast<EnemySprite*>(obj.get())) {
                 Enemy& e = enemySprite->getEnemy();
                 if (e.getType() == DRONE) {
                     const float speed   = 120.f;
@@ -288,14 +287,17 @@ void Game::run() {
         for (const auto& o : objects)
             o->draw(window);
         window.display();
-        if (world.isGameOver()) {
-            std::cout << "Game Over!\n";
+        if (world.isGameOver() || world.isLevelCompleted()) {
             window.close();
-            return;
-        }
-        if (world.isLevelCompleted()) {
-            std::cout << "You Win!\n";
-            window.close();
+            WindowFactory* factory = new CyberUIFactory();
+            std::string msg = world.isGameOver() ? "GAME OVER" : "YOU WIN";
+            EndScreen* screen = factory->createEndResult(msg, backgroundTex);
+            if (screen) {
+                screen->show();
+                delete screen;
+            }
+
+            delete factory;
             return;
         }
     }

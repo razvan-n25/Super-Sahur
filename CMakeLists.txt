@@ -81,6 +81,13 @@ add_executable(${PROJECT_NAME}
         headers/World.h
         headers/GameExcepsions.cpp
         headers/GameExcepsions.h
+        headers/EndScreen.cpp
+        headers/EndScreen.h
+        headers/PopupBox.h
+        headers/SettingsManager.cpp
+        headers/SettingsManager.h
+        headers/WindowFactory.cpp
+        headers/WindowFactory.h
 )
 
 include(cmake/CompilerFlags.cmake)

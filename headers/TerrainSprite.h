@@ -10,15 +10,13 @@ class TerrainSprite : public GameObject {
 private:
     const Terrain& terrain;
     sf::Sprite sprite;
-
+    void drawImpl(sf::RenderWindow& window) const override;
     static constexpr float GROUND_Y = 500.0f;
 
 public:
     TerrainSprite(const Terrain& t, const sf::Texture& tex);
 
     void update() override;
-    void drawImpl(sf::RenderWindow& window) const override;
-
     [[nodiscard]] std::unique_ptr<GameObject> clone() const override;
 };
 

@@ -10,15 +10,12 @@ class PlayerSprite : public GameObject {
 private:
     Player& player;
     sf::Sprite sprite;
-
+    void drawImpl(sf::RenderWindow& window) const override;
     static constexpr float GROUND_Y = 500.0f;
 
 public:
     PlayerSprite(Player& p, const sf::Texture& tex);
-
     void update() override;
-    void drawImpl(sf::RenderWindow& window) const override;
-
     std::unique_ptr<GameObject> clone() const override;
 };
 

@@ -10,7 +10,7 @@
 class GameObject {
 private:
     int layer;
-
+    virtual void drawImpl(sf::RenderWindow& window) const = 0;
 public:
     explicit GameObject(int layer_ = 0);
     virtual ~GameObject();
@@ -24,6 +24,6 @@ public:
 
     [[nodiscard]] virtual std::unique_ptr<GameObject> clone() const = 0;
 
-    virtual void drawImpl(sf::RenderWindow& window) const = 0;
+
 };
 #endif //OOP_GAMEOBJECT_H

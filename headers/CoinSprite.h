@@ -12,11 +12,11 @@ private:
     sf::Sprite sprite;
     float rotationSpeed;
     static constexpr float GROUND_Y  = 500.0f;
+    void drawImpl(sf::RenderWindow& window) const override;
 public:
     CoinSprite(Coin* c, const sf::Texture& tex);
     void attachCoin(Coin* c) { coin = c; }
     void update() override;
-    void drawImpl(sf::RenderWindow& window) const override;
     [[nodiscard]] std::unique_ptr<GameObject> clone() const override;
 };
 #endif //OOP_COINSPRITE_H
