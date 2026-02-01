@@ -5,9 +5,7 @@
 #ifndef OOP_SETTINGSMANAGER_H
 #define OOP_SETTINGSMANAGER_H
 
-
 #include <SFML/Graphics.hpp>
-
 class SettingsManager {
 private:
     SettingsManager();
@@ -18,6 +16,4 @@ public:
     static SettingsManager& getInstance();
     sf::Font& getFont();
 };
-
-
 #endif //OOP_SETTINGSMANAGER_H

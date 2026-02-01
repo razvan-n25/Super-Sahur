@@ -1,7 +1,6 @@
 //
 // Created by razva on 23/01/2026.
 //
-
 #ifndef OOP_POPUPBOX_H
 #define OOP_POPUPBOX_H
 #include <SFML/Graphics.hpp>

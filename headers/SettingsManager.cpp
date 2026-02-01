@@ -8,11 +8,9 @@ SettingsManager& SettingsManager::getInstance() {
     static SettingsManager instance;
     return instance;
 }
-
 SettingsManager::SettingsManager() {
     if (!mainFont.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
         throw AssetLoadException("System Arial", "Singleton Font");
     }
 }
-
 sf::Font& SettingsManager::getFont() { return mainFont; }
