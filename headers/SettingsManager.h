@@ -4,7 +4,7 @@
 
 #ifndef OOP_SETTINGSMANAGER_H
 #define OOP_SETTINGSMANAGER_H
-
+//Singleton
 #include <SFML/Graphics.hpp>
 class SettingsManager {
 private:

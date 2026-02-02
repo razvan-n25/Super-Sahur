@@ -4,8 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "PopupBox.h"
-#include "SettingsManager.h"
-
+//obiectele ce vor fi folosite de Abstract Factory
 class EndScreen {
 public:
     virtual ~EndScreen() = default;
